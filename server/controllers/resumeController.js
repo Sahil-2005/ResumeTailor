@@ -1,20 +1,20 @@
-const { parseResume } = require("../utils/fileParser");
-const { getAISuggestions } = require("../utils/gptHelper");
+const { extractTextFromFile } = require("../utils/fileParser");
+const { generateSuggestionsWithGemini } = require("../utils/geminiHelper");
 
-exports.handleResumeUpload = async (req, res) => {
-  const resumeFile = req.file;
+exports.handleResumeSuggestion = async (req, res) => {
   const jobDescription = req.body.jobDescription;
+  const resumeFile = req.file;
 
-  if (!resumeFile || !jobDescription) {
-    return res.status(400).json({ message: "Missing resume file or job description." });
+  if (!jobDescription || !resumeFile) {
+    return res.status(400).json({ message: "Resume and job description are required." });
   }
 
   try {
-    const resumeText = await parseResume(resumeFile);
-    const suggestions = await getAISuggestions(resumeText, jobDescription);
-    res.status(200).json({ suggestions });
-  } catch (error) {
-    console.error("Error:", error.message);
-    res.status(500).json({ message: "Failed to process resume." });
+    const resumeText = await extractTextFromFile(resumeFile);
+    const suggestions = await generateSuggestionsWithGemini(resumeText, jobDescription);
+    res.json({ suggestions });
+  } catch (err) {
+    console.error("Error:", err.message);
+    res.status(500).json({ message: "Failed to generate suggestions." });
   }
 };

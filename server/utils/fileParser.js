@@ -1,22 +1,27 @@
 const pdfParse = require("pdf-parse");
-const mammoth = require("mammoth");
+const { readFile } = require("fs/promises");
+const path = require("path");
+const fs = require("fs");
 
-exports.parseResume = async (file) => {
-  const buffer = file.buffer;
-  const mimetype = file.mimetype;
+exports.extractTextFromFile = async (file) => {
+  const ext = path.extname(file.originalname).toLowerCase();
+  const filePath = file.path;
 
-  if (mimetype === "application/pdf") {
+  let text = "";
+
+  if (ext === ".pdf") {
+    const buffer = await readFile(filePath);
     const data = await pdfParse(buffer);
-    return data.text;
+    text = data.text;
+  } else if (ext === ".doc" || ext === ".docx") {
+    // For DOCX you could use `mammoth` or another lib
+    throw new Error("DOC/DOCX parsing not implemented. Try using a PDF.");
+  } else {
+    throw new Error("Unsupported file type");
   }
 
-  if (
-    mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
-    mimetype === "application/msword"
-  ) {
-    const { value } = await mammoth.extractRawText({ buffer });
-    return value;
-  }
+  // Optionally delete temp file
+  fs.unlink(filePath, () => {});
 
-  throw new Error("Unsupported file type");
+  return text;
 };

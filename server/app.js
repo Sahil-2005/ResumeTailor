@@ -1,23 +1,15 @@
 const express = require("express");
 const cors = require("cors");
-const multer = require("multer");
-const path = require("path");
-require("dotenv").config();
-
+const dotenv = require("dotenv");
 const resumeRoutes = require("./routes/resumeRoutes");
 
+dotenv.config();
+
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
-app.use("/api", resumeRoutes);
+app.use("/api/generate-suggestions", resumeRoutes);
 
-// For deployment check
-app.get("/", (req, res) => {
-  res.send("ResumeTailor API is running...");
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
