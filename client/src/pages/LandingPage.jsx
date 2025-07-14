@@ -24,56 +24,6 @@ export default function LandingPage() {
     setResumeFile(e.target.files[0]);
   };
 
-  // const handleGenerate = async () => {
-  //   if (!resumeFile || !jobDescription.trim()) {
-  //     setError("Please upload a resume and paste a job description.");
-  //     return;
-  //   }
-
-  //   setLoading(true);
-  //   setSuggestions("");
-  //   setError("");
-
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append("resume", resumeFile);
-  //     formData.append("jobDescription", jobDescription);
-
-  //     const response = await fetch(
-  //       "http://localhost:5000/api/generate-suggestions",
-  //       {
-  //         method: "POST",
-  //         body: formData,
-  //       }
-  //     );
-
-  //     console.log("response.ok:", response.ok);
-  //     console.log("response.status:", response.status);
-
-  //     const text = await response.text();
-  //     console.log("Raw response body:", text);
-
-  //     let data;
-  //     try {
-  //       data = JSON.parse(text);
-  //     } catch (e) {
-  //       console.error("💥 JSON.parse failed:", e);
-  //     }
-
-  //     if (!response.ok) {
-  //       setError(data?.message || `Error: ${response.status}`);
-  //     } else {
-  //       setSuggestions(data.suggestions || "");
-  //     }
-
-  //     // setSuggestions(data.suggestions || "No suggestions received.");
-  //   } catch (err) {
-  //     setError(err.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleGenerate = async () => {
     if (!resumeFile || !jobDescription.trim()) {
       setError("Please upload a resume and paste a job description.");
@@ -368,59 +318,40 @@ export default function LandingPage() {
             </button>
           </div>
           {/* Results */}
-          {/* Results */}
           {suggestions && (
-            <div className="mt-6 p-6 border border-blue-300 bg-blue-50 rounded-lg text-gray-800 shadow-sm">
-              <h3 className="text-xl font-semibold mb-4 text-blue-800 flex items-center gap-2">
-                🧠 AI Suggestions:
-              </h3>
+            <div className="mt-10 px-6 py-8 bg-white border border-blue-300 rounded-2xl shadow-md transition-all duration-300">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-3xl">💡</span>
+                <h3 className="text-2xl font-bold text-blue-800">
+                  Tailored AI Suggestions
+                </h3>
+              </div>
 
               <ReactMarkdown
                 components={{
-                  h1: ({ node, ...props }) => (
-                    <h1
-                      className="text-3xl font-bold text-blue-900 mt-6 mb-2"
-                      {...props}
-                    />
-                  ),
-                  h2: ({ node, ...props }) => (
-                    <h2
-                      className="text-2xl font-semibold text-blue-800 mt-5 mb-2"
-                      {...props}
-                    />
-                  ),
-                  h3: ({ node, ...props }) => (
-                    <h3
-                      className="text-xl font-semibold text-blue-700 mt-4 mb-2"
-                      {...props}
-                    />
-                  ),
                   p: ({ node, ...props }) => (
                     <p
-                      className="text-base leading-relaxed mb-3 text-gray-800"
+                      className="mb-4 text-gray-800 leading-relaxed text-base"
                       {...props}
                     />
                   ),
                   ul: ({ node, ...props }) => (
                     <ul
-                      className="list-disc list-inside space-y-2 mb-3 text-gray-800"
+                      className="list-disc ml-6 space-y-4 text-gray-900"
                       {...props}
                     />
                   ),
                   li: ({ node, ...props }) => (
-                    <li className="ml-4" {...props} />
+                    <li className="text-base leading-relaxed" {...props} />
                   ),
                   strong: ({ node, ...props }) => (
-                    <strong className="font-bold text-black" {...props} />
-                  ),
-                  blockquote: ({ node, ...props }) => (
-                    <blockquote
-                      className="border-l-4 border-blue-400 pl-4 italic text-gray-600 my-4"
+                    <strong
+                      className="font-semibold text-blue-900"
                       {...props}
                     />
                   ),
                   em: ({ node, ...props }) => (
-                    <em className="italic text-gray-700" {...props} />
+                    <em className="italic text-blue-700" {...props} />
                   ),
                 }}
               >
