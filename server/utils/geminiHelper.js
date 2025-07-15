@@ -6,7 +6,7 @@ exports.generateSuggestionsWithGemini = async (resumeText, jobDescription) => {
   const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const prompt = `
-You are a resume coach. Here's a resume and a job description. Provide 3–5 bullet-point suggestions for improvement.
+You are a resume coach. Here's a resume and a job description. Provide 3-5 bullet-point suggestions for improvement.
 
 **Resume:**
 ${resumeText}
