@@ -6,12 +6,22 @@ exports.generateSuggestionsWithGemini = async (resumeText, jobDescription) => {
   const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const prompt = `
-You are a resume coach. Here's a resume and a job description. Provide 3-5 bullet-point suggestions for improvement.
+You are an expert resume coach and career advisor. Given the candidate's resume and a job description, analyze the content and provide 4–6 clear, impactful suggestions to optimize the resume for this specific job.
 
-**Resume:**
+Be specific, concise, and actionable. Focus on:
+- Adding or highlighting relevant skills, keywords, or achievements
+- Rephrasing or enhancing bullet points to match the job requirements
+- Removing or downplaying irrelevant experience
+- Improving clarity, impact, or professionalism of the content
+
+Format your response in **bullet points**. Avoid repeating exact lines from the resume.
+
+---
+**Resume (Candidate):**
 ${resumeText}
 
-**Job Description:**
+---
+**Target Job Description:**
 ${jobDescription}
 `;
 
