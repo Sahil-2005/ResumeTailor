@@ -76,9 +76,6 @@ cd ../client
 npm run dev
 The app will be running at 👉 http://localhost:5173
 
-📸 Screenshots
-(Add screenshots or GIFs here to showcase the UI flow, e.g. upload, analysis results, etc.)
-
 📈 Roadmap
 🔹 AI-powered keyword optimization
 🔹 Resume scoring system
