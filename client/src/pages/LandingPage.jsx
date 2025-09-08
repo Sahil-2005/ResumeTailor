@@ -443,6 +443,9 @@ export default function LandingPage() {
 
       const response = await fetch("http://localhost:5000/api/generate-suggestions", {
         method: "POST",
+        headers: {
+    "Authorization": `Bearer ${localStorage.getItem("token")}`,
+  },
         body: formData,
       })
 
@@ -469,6 +472,61 @@ export default function LandingPage() {
       setLoading(false)
     }
   }
+
+
+//   const handleGenerate = async () => {
+//   if (!resumeFile || !jobDescription.trim()) {
+//     setError("Please upload a resume and paste a job description.")
+//     return
+//   }
+
+//   setLoading(true)
+//   setSuggestions("")
+//   setError("")
+
+//   try {
+//     const formData = new FormData()
+//     formData.append("resume", resumeFile)
+//     formData.append("jobDescription", jobDescription)
+
+//     const response = await fetch("http://localhost:5000/api/generate-suggestions", {
+//       method: "POST",
+//       headers: {
+//         "Authorization": `Bearer ${localStorage.getItem("token")}`,
+//       },
+//       body: formData,
+//     })
+
+//     const text = await response.text()
+//     console.log("Raw response body:", text)
+
+//     let data
+//     try {
+//       data = JSON.parse(text)
+//     } catch (e) {
+//       console.error("❌ Failed to parse JSON:", e)
+//       throw new Error("Invalid response from server.")
+//     }
+
+//     if (!response.ok) {
+//       // ✅ if server says invalid token → force logout
+//       if (response.status === 401) {
+//         localStorage.removeItem("token")
+//         navigate("/login") // redirect
+//         return
+//       }
+//       throw new Error(data?.message || `Error: ${response.status}`)
+//     }
+
+//     setSuggestions(data.suggestions || "No suggestions received.")
+//   } catch (err) {
+//     console.error("Fetch error:", err)
+//     setError(err.message)
+//   } finally {
+//     setLoading(false)
+//   }
+// }
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
