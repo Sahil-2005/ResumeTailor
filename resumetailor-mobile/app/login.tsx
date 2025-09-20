@@ -147,7 +147,8 @@
 //   link: { color: "#2563eb", textAlign: "center" },
 // })
 
-// resumetailor-mobile/pages/Login.tsx
+
+
 import React, { useState } from "react";
 import {
   View,
@@ -242,7 +243,7 @@ export default function Login() {
           </TouchableOpacity>
         </View>
       </View> */}
-      <Navbar/>
+      <Navbar variant="register"/>
 
       {/* Main card */}
       <View style={styles.card}>
@@ -329,7 +330,7 @@ export default function Login() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { flex: 1, padding: 20 },
   navbar: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -339,10 +340,16 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.9)",
     borderBottomWidth: 1,
     borderBottomColor: "#e5e7eb",
+    marginBottom: 20,
   },
   navLeft: { flexDirection: "row", alignItems: "center" },
-  logoText: { fontSize: 18, fontWeight: "bold", marginLeft: 6, color: "#111827" },
-  navRight: { flexDirection: "row", alignItems: "center", gap: 12 },
+  logoText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginLeft: 6,
+    color: "#111827",
+  },
+  navRight: { flexDirection: "row", alignItems: "center" },
   navLink: { color: "#374151", fontSize: 15, marginRight: 12 },
   registerButton: {
     backgroundColor: "#2563eb",

@@ -231,7 +231,7 @@ export default function Register() {
               </TouchableOpacity>
             </View>
           </View> */}
-          <Navbar/>
+          <Navbar variant="login"/>
 
           {/* Card */}
           <View style={styles.card}>
