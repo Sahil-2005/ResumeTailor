@@ -29,7 +29,7 @@ export default function Register() {
 
     setLoading(true)
     try {
-      const res = await fetch("http://192.168.1.104:5000/api/auth/register", {
+      const res = await fetch("http://192.168.1.103:5000/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fullName, email, password }),
@@ -39,7 +39,8 @@ export default function Register() {
       if (!res.ok) throw new Error(data.message || "Registration failed")
 
       Alert.alert("Success", "Registration successful! Please login.")
-      navigation.navigate("Login" as never)
+      // navigation.navigate("Login" as never)
+      router.push("/login");
     } catch (err: any) {
       Alert.alert("Error", err.message)
     } finally {

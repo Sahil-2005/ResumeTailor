@@ -28,33 +28,9 @@ export default function Login({ setToken }: Props) {
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const navigation = useNavigation()
-
-  // const handleSubmit = async () => {
-  //   if (!email || !password) {
-  //     Alert.alert("Error", "Please fill in all fields")
-  //     return
-  //   }
-
-  //   setLoading(true)
-  //   try {
-  //     const res = await fetch("http://localhost:5000/api/auth/login", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ email, password }),
-  //     })
-  //     const data = await res.json()
-
-  //     if (!res.ok) throw new Error(data.message || "Login failed")
-
-  //     await AsyncStorage.setItem("token", data.token)
-  //     setToken(data.token)
-  //   } catch (err: any) {
-  //     Alert.alert("Error", err.message)
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
   const handleSubmit = async () => {
+
+    
   if (!email || !password) {
     Alert.alert("Error", "Please fill in all fields");
     return;
@@ -62,7 +38,7 @@ export default function Login({ setToken }: Props) {
 
   setLoading(true);
   try {
-    const res = await fetch("http://192.168.1.104:5000/api/auth/login", {
+    const res = await fetch("http://192.168.1.103:5000/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -76,7 +52,7 @@ export default function Login({ setToken }: Props) {
     await AsyncStorage.setItem("token", data.token);
     await AsyncStorage.setItem("user", JSON.stringify(data.user));
     // setToken(data.token);
-    router.replace("/");
+    router.replace("/home");
 
     Alert.alert("Success", `Welcome ${data.user.fullName}!`);
   } catch (err: any) {
