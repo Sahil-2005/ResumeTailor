@@ -183,7 +183,7 @@ export default function Register() {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("http://192.168.1.103:5000/api/auth/register", {
+      const res = await fetch("http://192.168.1.106:5000/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fullName, email, password }),
