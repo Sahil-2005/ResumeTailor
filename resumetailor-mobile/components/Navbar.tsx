@@ -56,12 +56,12 @@ export default function Navbar({ variant }: NavbarProps) {
       {/* Right side */}
       <View style={styles.navRight}>
 
-        { variant === "homeBlock" ? null : 
+        {/* { variant === "homeBlock" ? null : 
 
         (<TouchableOpacity onPress={() => router.replace("/")}>
           <Text style={styles.navLink}>Home</Text>
         </TouchableOpacity>)
-        }
+        } */}
 
         {isLoggedIn ? (
           <>
