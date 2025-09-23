@@ -1,247 +1,3 @@
-// // app/home.tsx
-// import React, { useEffect, useState } from "react";
-// import {
-//   View,
-//   Text,
-//   TouchableOpacity,
-//   TextInput,
-//   ScrollView,
-//   ActivityIndicator,
-//   StyleSheet,
-// } from "react-native";
-// import { SafeAreaView } from "react-native-safe-area-context";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
-// import { Stack, useRouter } from "expo-router";
-// import Markdown from "react-native-markdown-display";
-// import Navbar from "../components/Navbar";
-// import { LinearGradient } from "expo-linear-gradient";
-
-// export default function HomeScreen() {
-//   const [jobDescription, setJobDescription] = useState("");
-//   const [resumeFile, setResumeFile] = useState<any>(null); // TODO: file upload later
-//   const [loading, setLoading] = useState(false);
-//   const [suggestions, setSuggestions] = useState("");
-//   const [error, setError] = useState("");
-//   const [isAuthed, setIsAuthed] = useState(false);
-//   const router = useRouter();
-
-//   useEffect(() => {
-//     const checkToken = async () => {
-//       const tok = await AsyncStorage.getItem("token");
-//       setIsAuthed(!!tok);
-//     };
-//     checkToken();
-//   }, []);
-
-//   const handleLogout = async () => {
-//     await AsyncStorage.removeItem("token");
-//     setIsAuthed(false);
-//     router.replace("/login");
-//   };
-
-//   const handleGenerate = async () => {
-//     if (!resumeFile || !jobDescription.trim()) {
-//       setError(
-//         "Please upload a resume (not implemented yet) and paste a job description."
-//       );
-//       return;
-//     }
-
-//     setLoading(true);
-//     setSuggestions("");
-//     setError("");
-
-//     try {
-//       const token = await AsyncStorage.getItem("token");
-//       const formData = new FormData();
-//       formData.append("resume", {
-//         uri: resumeFile.uri,
-//         name: "resume.pdf",
-//         type: "application/pdf",
-//       } as any);
-//       formData.append("jobDescription", jobDescription);
-
-//       const response = await fetch(
-//         "http://localhost:5000/api/generate-suggestions",
-//         {
-//           method: "POST",
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//           },
-//           body: formData,
-//         }
-//       );
-
-//       const text = await response.text();
-//       let data;
-//       try {
-//         data = JSON.parse(text);
-//       } catch (e) {
-//         throw new Error("Invalid response from server.");
-//       }
-
-//       if (!response.ok) {
-//         throw new Error(data?.message || `Error: ${response.status}`);
-//       }
-
-//       setSuggestions(data.suggestions || "No suggestions received.");
-//     } catch (err: any) {
-//       setError(err.message);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     <>
-//       <Stack.Screen options={{ headerShown: false }} />
-//       <SafeAreaView style={{ flex: 1 }}>
-//         <LinearGradient
-//           colors={["#f8fafc", "#e0f2fe", "#eef2ff"]}
-//           style={{ flex: 1 }}
-//         >
-//           {/* Navbar */}
-//           <Navbar variant="homeBlock" />
-
-//           <ScrollView
-//             style={styles.scroll}
-//             contentContainerStyle={{ paddingBottom: 40 }}
-//           >
-//             {/* Hero Section */}
-//             <View style={styles.hero}>
-//               <Text style={styles.heroTitle}>
-//                 Tailor Your Resume Instantly with AI
-//               </Text>
-//               <Text style={styles.heroSubtitle}>
-//                 Upload your resume, paste a job description, and get smart
-//                 suggestions.
-//               </Text>
-//             </View>
-
-//             {/* Job Description Input */}
-//             <View style={styles.card}>
-//               <Text style={styles.label}>Job Description</Text>
-//               <TextInput
-//                 multiline
-//                 placeholder="Paste the job description..."
-//                 value={jobDescription}
-//                 onChangeText={setJobDescription}
-//                 style={styles.textArea}
-//               />
-
-//               {/* Error/Loading */}
-//               {error ? (
-//                 <Text style={styles.errorText}>{error}</Text>
-//               ) : null}
-//               {loading ? (
-//                 <ActivityIndicator
-//                   size="large"
-//                   color="#1e3a8a"
-//                   style={{ marginBottom: 10 }}
-//                 />
-//               ) : null}
-
-//               {/* Generate Button */}
-//               <TouchableOpacity
-//                 onPress={handleGenerate}
-//                 style={[styles.button, loading && styles.disabledButton]}
-//                 disabled={loading}
-//               >
-//                 <Text style={styles.buttonText}>
-//                   {loading ? "Processing..." : "Generate Suggestions"}
-//                 </Text>
-//               </TouchableOpacity>
-//             </View>
-
-//             {/* Results */}
-//             {suggestions ? (
-//               <View style={styles.resultsCard}>
-//                 <Text style={styles.resultsTitle}>
-//                   💡 Tailored AI Suggestions
-//                 </Text>
-//                 <Markdown>{suggestions}</Markdown>
-//               </View>
-//             ) : null}
-//           </ScrollView>
-//         </LinearGradient>
-//       </SafeAreaView>
-//     </>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-  
-//   scroll: { flex: 1, padding: 20 },
-//   hero: { marginBottom: 20 },
-//   heroTitle: {
-//     fontSize: 26,
-//     fontWeight: "bold",
-//     marginBottom: 10,
-//     color: "#111827",
-//     textAlign: "center",
-//   },
-//   heroSubtitle: {
-//     fontSize: 15,
-//     color: "#4b5563",
-//     textAlign: "center",
-//     marginBottom: 10,
-//   },
-//   card: {
-//     backgroundColor: "rgba(255,255,255,0.9)",
-//     borderRadius: 16,
-//     padding: 20,
-//     shadowColor: "#000",
-//     shadowOpacity: 0.1,
-//     shadowOffset: { width: 0, height: 2 },
-//     shadowRadius: 6,
-//     elevation: 4,
-//     marginBottom: 20,
-//   },
-//   label: { fontWeight: "600", marginBottom: 6, color: "#374151" },
-//   textArea: {
-//     borderColor: "#d1d5db",
-//     borderWidth: 1,
-//     borderRadius: 8,
-//     padding: 12,
-//     minHeight: 100,
-//     textAlignVertical: "top",
-//     marginBottom: 10,
-//     backgroundColor: "#fff",
-//   },
-//   errorText: { color: "#b91c1c", marginBottom: 10 },
-//   button: {
-//     backgroundColor: "#2563eb",
-//     paddingVertical: 14,
-//     borderRadius: 8,
-//     alignItems: "center",
-//     shadowColor: "#000",
-//     shadowOpacity: 0.2,
-//     shadowOffset: { width: 0, height: 2 },
-//     shadowRadius: 3,
-//     elevation: 3,
-//   },
-//   disabledButton: { opacity: 0.7 },
-//   buttonText: { color: "#fff", fontWeight: "600", fontSize: 16 },
-//   resultsCard: {
-//     backgroundColor: "rgba(255,255,255,0.9)",
-//     borderRadius: 16,
-//     padding: 20,
-//     shadowColor: "#000",
-//     shadowOpacity: 0.1,
-//     shadowOffset: { width: 0, height: 2 },
-//     shadowRadius: 6,
-//     elevation: 4,
-//   },
-//   resultsTitle: {
-//     fontSize: 20,
-//     fontWeight: "bold",
-//     marginBottom: 10,
-//     color: "#111827",
-//   },
-// });
-
-
-// app/home.tsx
 import React, { useState } from "react";
 import {
   View,
@@ -250,17 +6,126 @@ import {
   TextInput,
   ScrollView,
   StyleSheet,
+  Alert,
+  ActivityIndicator
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack } from "expo-router";
 import Navbar from "../components/Navbar";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
+import * as DocumentPicker from "expo-document-picker";
+import AsyncStorage from "@react-native-async-storage/async-storage"; // 🔑 Import AsyncStorage
+
 
 export default function HomeScreen() {
-  const [jobDescription, setJobDescription] = useState("");
+  // const [jobDescription, setJobDescription] = useState("");
+  // const [resumeFile, setResumeFile] = useState<any>(null);
+
+  // // Handle Resume Upload
+  // const handleUpload = async () => {
+  //   try {
+  //     const result = await DocumentPicker.getDocumentAsync({
+  //       type: ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"],
+  //       copyToCacheDirectory: true,
+  //     });
+
+  //     if (result.canceled) return; // user cancelled
+
+  //     setResumeFile(result.assets?.[0] || result);
+  //     Alert.alert("File Selected", `You picked: ${result.assets?.[0]?.name || "Unknown file"}`);
+  //   } catch (err) {
+  //     console.error(err);
+  //     Alert.alert("Error", "Failed to pick a file");
+  //   }
+  // };
+
+
+
+const [jobDescription, setJobDescription] = useState("");
+  const [resumeFile, setResumeFile] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState("");
+  const [error, setError] = useState("");
+
+  // Handle Resume Upload
+  const handleUpload = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: [
+          "application/pdf",
+          "application/msword",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        ],
+        copyToCacheDirectory: true,
+      });
+
+      if (result.canceled) return; // user cancelled
+
+      setResumeFile(result.assets?.[0] || result);
+      Alert.alert("File Selected", `You picked: ${result.assets?.[0]?.name || "Unknown file"}`);
+    } catch (err) {
+      console.error(err);
+      Alert.alert("Error", "Failed to pick a file");
+    }
+  };
+
+  // 🔑 Handle Generate Suggestions (backend call with AsyncStorage)
+  const handleGenerate = async () => {
+    if (!resumeFile || !jobDescription.trim()) {
+      Alert.alert("Error", "Please upload a resume and paste a job description.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError("");
+      setSuggestions("");
+
+      // Get token from AsyncStorage
+      const token = await AsyncStorage.getItem("token");
+
+      const formData = new FormData();
+      formData.append("resume", {
+        uri: resumeFile.uri,
+        name: resumeFile.name || "resume.pdf",
+        type: resumeFile.mimeType || "application/pdf",
+      } as any);
+      formData.append("jobDescription", jobDescription);
+
+      const response = await fetch("http://192.168.1.103:5000/api/generate-suggestions", {
+        method: "POST",
+        headers: {
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+        body: formData,
+      });
+
+      const text = await response.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        throw new Error("Invalid response from server.");
+      }
+
+      if (!response.ok) {
+        throw new Error(data?.message || `Error: ${response.status}`);
+      }
+
+      setSuggestions(data.suggestions || "No suggestions received.");
+    } catch (err: any) {
+      console.error("Fetch error:", err);
+      setError(err.message);
+      Alert.alert("Error", err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   return (
+
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <SafeAreaView style={{ flex: 1 }}>
@@ -288,9 +153,12 @@ export default function HomeScreen() {
                   <Text style={styles.heroButtonText}>Get Started</Text>
                 </TouchableOpacity>
               </View>
-              {/* Right side graphic placeholder */}
               <View style={styles.heroGraphic}>
-                <Ionicons name="document-text-outline" size={80} color="#2563eb" />
+                <Ionicons
+                  name="document-text-outline"
+                  size={80}
+                  color="#2563eb"
+                />
               </View>
             </View>
 
@@ -303,15 +171,11 @@ export default function HomeScreen() {
               </View>
               <View style={styles.stepRow}>
                 <Ionicons name="briefcase-outline" size={32} color="#2563eb" />
-                <Text style={styles.stepText}>
-                  Paste the job description
-                </Text>
+                <Text style={styles.stepText}>Paste the job description</Text>
               </View>
               <View style={styles.stepRow}>
                 <Ionicons name="sparkles-outline" size={32} color="#2563eb" />
-                <Text style={styles.stepText}>
-                  Get AI-powered suggestions
-                </Text>
+                <Text style={styles.stepText}>Get AI-powered suggestions</Text>
               </View>
             </View>
 
@@ -339,11 +203,13 @@ export default function HomeScreen() {
             </View>
 
             {/* Try It Now */}
-            <View style={styles.section}>
+            {/* <View style={styles.section}>
               <Text style={styles.sectionTitle}>Try It Now</Text>
-              <TouchableOpacity style={styles.uploadButton}>
+              <TouchableOpacity style={styles.uploadButton} onPress={handleUpload}>
                 <Ionicons name="cloud-upload-outline" size={20} color="#fff" />
-                <Text style={styles.uploadText}>Upload Resume</Text>
+                <Text style={styles.uploadText}>
+                  {resumeFile ? resumeFile.name : "Upload Resume"}
+                </Text>
               </TouchableOpacity>
 
               <TextInput
@@ -357,6 +223,38 @@ export default function HomeScreen() {
               <TouchableOpacity style={styles.generateButton}>
                 <Text style={styles.generateText}>Generate Suggestions</Text>
               </TouchableOpacity>
+            </View> */}
+            {/* Try It Now */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Try It Now</Text>
+              <TouchableOpacity style={styles.uploadButton} onPress={handleUpload}>
+                <Ionicons name="cloud-upload-outline" size={20} color="#fff" />
+                <Text style={styles.uploadText}>
+                  {resumeFile ? resumeFile.name : "Upload Resume"}
+                </Text>
+              </TouchableOpacity>
+
+              <TextInput
+                multiline
+                placeholder="Paste the job description..."
+                value={jobDescription}
+                onChangeText={setJobDescription}
+                style={styles.textArea}
+              />
+
+              {error ? <Text style={{ color: "red", marginBottom: 10 }}>{error}</Text> : null}
+              {loading && <ActivityIndicator size="large" color="#2563eb" style={{ marginBottom: 10 }} />}
+
+              <TouchableOpacity style={styles.generateButton} onPress={handleGenerate} disabled={loading}>
+                <Text style={styles.generateText}>{loading ? "Processing..." : "Generate Suggestions"}</Text>
+              </TouchableOpacity>
+
+              {suggestions ? (
+                <View style={{ marginTop: 20, backgroundColor: "#fff", padding: 16, borderRadius: 8 }}>
+                  <Text style={{ fontWeight: "bold", fontSize: 16, marginBottom: 10 }}>AI Suggestions:</Text>
+                  <Text>{suggestions}</Text>
+                </View>
+              ) : null}
             </View>
 
             {/* Footer */}
@@ -477,3 +375,4 @@ const styles = StyleSheet.create({
   },
   footerText: { fontSize: 12, color: "#6b7280" },
 });
+
