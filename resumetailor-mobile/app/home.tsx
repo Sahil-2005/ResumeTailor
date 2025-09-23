@@ -7,7 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   Alert,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack } from "expo-router";
@@ -16,7 +16,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // 🔑 Import AsyncStorage
-
 
 export default function HomeScreen() {
   // const [jobDescription, setJobDescription] = useState("");
@@ -40,9 +39,7 @@ export default function HomeScreen() {
   //   }
   // };
 
-
-
-const [jobDescription, setJobDescription] = useState("");
+  const [jobDescription, setJobDescription] = useState("");
   const [resumeFile, setResumeFile] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState("");
@@ -63,7 +60,10 @@ const [jobDescription, setJobDescription] = useState("");
       if (result.canceled) return; // user cancelled
 
       setResumeFile(result.assets?.[0] || result);
-      Alert.alert("File Selected", `You picked: ${result.assets?.[0]?.name || "Unknown file"}`);
+      Alert.alert(
+        "File Selected",
+        `You picked: ${result.assets?.[0]?.name || "Unknown file"}`
+      );
     } catch (err) {
       console.error(err);
       Alert.alert("Error", "Failed to pick a file");
@@ -73,7 +73,10 @@ const [jobDescription, setJobDescription] = useState("");
   // 🔑 Handle Generate Suggestions (backend call with AsyncStorage)
   const handleGenerate = async () => {
     if (!resumeFile || !jobDescription.trim()) {
-      Alert.alert("Error", "Please upload a resume and paste a job description.");
+      Alert.alert(
+        "Error",
+        "Please upload a resume and paste a job description."
+      );
       return;
     }
 
@@ -93,13 +96,16 @@ const [jobDescription, setJobDescription] = useState("");
       } as any);
       formData.append("jobDescription", jobDescription);
 
-      const response = await fetch("http://192.168.1.103:5000/api/generate-suggestions", {
-        method: "POST",
-        headers: {
-          Authorization: token ? `Bearer ${token}` : "",
-        },
-        body: formData,
-      });
+      const response = await fetch(
+        "http://192.168.1.103:5000/api/generate-suggestions",
+        {
+          method: "POST",
+          headers: {
+            Authorization: token ? `Bearer ${token}` : "",
+          },
+          body: formData,
+        }
+      );
 
       const text = await response.text();
       let data;
@@ -123,9 +129,7 @@ const [jobDescription, setJobDescription] = useState("");
     }
   };
 
-
   return (
-
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <SafeAreaView style={{ flex: 1 }}>
@@ -166,7 +170,11 @@ const [jobDescription, setJobDescription] = useState("");
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>How It Works</Text>
               <View style={styles.stepRow}>
-                <Ionicons name="cloud-upload-outline" size={32} color="#2563eb" />
+                <Ionicons
+                  name="cloud-upload-outline"
+                  size={32}
+                  color="#2563eb"
+                />
                 <Text style={styles.stepText}>Upload your resume</Text>
               </View>
               <View style={styles.stepRow}>
@@ -192,11 +200,19 @@ const [jobDescription, setJobDescription] = useState("");
                   <Text style={styles.cardText}>Save Time</Text>
                 </View>
                 <View style={styles.card}>
-                  <Ionicons name="checkmark-done-outline" size={28} color="#2563eb" />
+                  <Ionicons
+                    name="checkmark-done-outline"
+                    size={28}
+                    color="#2563eb"
+                  />
                   <Text style={styles.cardText}>Improve Success Rate</Text>
                 </View>
                 <View style={styles.card}>
-                  <Ionicons name="shield-checkmark-outline" size={28} color="#2563eb" />
+                  <Ionicons
+                    name="shield-checkmark-outline"
+                    size={28}
+                    color="#2563eb"
+                  />
                   <Text style={styles.cardText}>Secure & Private</Text>
                 </View>
               </View>
@@ -227,7 +243,10 @@ const [jobDescription, setJobDescription] = useState("");
             {/* Try It Now */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Try It Now</Text>
-              <TouchableOpacity style={styles.uploadButton} onPress={handleUpload}>
+              <TouchableOpacity
+                style={styles.uploadButton}
+                onPress={handleUpload}
+              >
                 <Ionicons name="cloud-upload-outline" size={20} color="#fff" />
                 <Text style={styles.uploadText}>
                   {resumeFile ? resumeFile.name : "Upload Resume"}
@@ -242,17 +261,40 @@ const [jobDescription, setJobDescription] = useState("");
                 style={styles.textArea}
               />
 
-              {error ? <Text style={{ color: "red", marginBottom: 10 }}>{error}</Text> : null}
-              {loading && <ActivityIndicator size="large" color="#2563eb" style={{ marginBottom: 10 }} />}
+              {error ? (
+                <Text style={{ color: "red", marginBottom: 10 }}>{error}</Text>
+              ) : null}
+              {loading && (
+                <ActivityIndicator
+                  size="large"
+                  color="#2563eb"
+                  style={{ marginBottom: 10 }}
+                />
+              )}
 
-              <TouchableOpacity style={styles.generateButton} onPress={handleGenerate} disabled={loading}>
-                <Text style={styles.generateText}>{loading ? "Processing..." : "Generate Suggestions"}</Text>
+              <TouchableOpacity
+                style={styles.generateButton}
+                onPress={handleGenerate}
+                disabled={loading}
+              >
+                <Text style={styles.generateText}>
+                  {loading ? "Processing..." : "Generate Suggestions"}
+                </Text>
               </TouchableOpacity>
 
               {suggestions ? (
-                <View style={{ marginTop: 20, backgroundColor: "#fff", padding: 16, borderRadius: 8 }}>
-                  <Text style={{ fontWeight: "bold", fontSize: 16, marginBottom: 10 }}>AI Suggestions:</Text>
-                  <Text>{suggestions}</Text>
+                <View style={styles.suggestionBox}>
+                  <Text style={styles.suggestionTitle}>💡 AI Suggestions</Text>
+                  {suggestions
+                    .split("\n")
+                    .filter((line) => line.trim() !== "")
+                    .map((line, idx) => (
+                      <Text key={idx} style={styles.suggestionText}>
+                        {line.startsWith("-") || line.startsWith("•")
+                          ? `• ${line.replace(/^[-•]\s*/, "")}`
+                          : line}
+                      </Text>
+                    ))}
                 </View>
               ) : null}
             </View>
@@ -296,6 +338,30 @@ const styles = StyleSheet.create({
   },
   heroButtonText: { color: "#fff", fontWeight: "600", fontSize: 16 },
   heroGraphic: { marginLeft: 20 },
+
+  suggestionBox: {
+    backgroundColor: "#fff",
+    padding: 16,
+    borderRadius: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 2,
+    marginTop: 20,
+  },
+  suggestionTitle: {
+    fontWeight: "bold",
+    fontSize: 18,
+    marginBottom: 12,
+    color: "#111827",
+  },
+  suggestionText: {
+    fontSize: 15,
+    color: "#374151",
+    marginBottom: 8,
+    lineHeight: 22,
+  },
 
   /* Sections */
   section: { marginBottom: 40 },
@@ -375,4 +441,3 @@ const styles = StyleSheet.create({
   },
   footerText: { fontSize: 12, color: "#6b7280" },
 });
-
