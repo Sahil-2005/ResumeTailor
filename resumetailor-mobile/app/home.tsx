@@ -16,6 +16,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // 🔑 Import AsyncStorage
+import Markdown from "react-native-markdown-display";
+
 
 export default function HomeScreen() {
   // const [jobDescription, setJobDescription] = useState("");
@@ -44,6 +46,7 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState("");
   const [error, setError] = useState("");
+
 
   // Handle Resume Upload
   const handleUpload = async () => {
@@ -97,7 +100,7 @@ export default function HomeScreen() {
       formData.append("jobDescription", jobDescription);
 
       const response = await fetch(
-        "http://192.168.1.103:5000/api/generate-suggestions",
+        "http://192.168.1.104:5000/api/generate-suggestions",
         {
           method: "POST",
           headers: {
@@ -283,20 +286,24 @@ export default function HomeScreen() {
               </TouchableOpacity>
 
               {suggestions ? (
-                <View style={styles.suggestionBox}>
-                  <Text style={styles.suggestionTitle}>💡 AI Suggestions</Text>
-                  {suggestions
-                    .split("\n")
-                    .filter((line) => line.trim() !== "")
-                    .map((line, idx) => (
-                      <Text key={idx} style={styles.suggestionText}>
-                        {line.startsWith("-") || line.startsWith("•")
-                          ? `• ${line.replace(/^[-•]\s*/, "")}`
-                          : line}
-                      </Text>
-                    ))}
-                </View>
-              ) : null}
+  <View style={styles.suggestionBox}>
+    <Text style={styles.suggestionTitle}>💡 AI Suggestions</Text>
+    <Markdown
+      style={{
+        body: { color: "#374151", fontSize: 15, lineHeight: 22 },
+        bullet_list_icon: { color: "#2563eb" },
+        heading1: { fontSize: 22, fontWeight: "bold", marginBottom: 10 },
+        heading2: { fontSize: 18, fontWeight: "bold", marginBottom: 8 },
+        strong: { fontWeight: "bold", color: "#111827" },
+        em: { fontStyle: "italic" },
+        paragraph: { marginBottom: 10 },
+      }}
+    >
+      {suggestions}
+    </Markdown>
+  </View>
+) : null}
+
             </View>
 
             {/* Footer */}
