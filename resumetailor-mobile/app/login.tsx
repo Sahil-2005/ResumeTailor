@@ -17,7 +17,6 @@
 
 // const router = useRouter();
 
-
 // interface Props {
 //   setToken: (token: string) => void
 // }
@@ -29,7 +28,6 @@
 //   const [loading, setLoading] = useState(false)
 //   const navigation = useNavigation()
 //   const handleSubmit = async () => {
-
 
 //   if (!email || !password) {
 //     Alert.alert("Error", "Please fill in all fields");
@@ -61,7 +59,6 @@
 //     setLoading(false);
 //   }
 // };
-
 
 //   return (
 //     <View style={styles.container}>
@@ -147,8 +144,6 @@
 //   link: { color: "#2563eb", textAlign: "center" },
 // })
 
-
-
 import React, { useState } from "react";
 import {
   View,
@@ -167,8 +162,6 @@ import { Stack } from "expo-router";
 import Navbar from "@/components/Navbar";
 
 import { SafeAreaView } from "react-native-safe-area-context";
-
-
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -210,7 +203,7 @@ export default function Login() {
 
   return (
     <>
-          {/* <Stack.Screen options={{ headerShown: false }} />
+      {/* <Stack.Screen options={{ headerShown: false }} />
 
            <SafeAreaView style={{ flex: 1, backgroundColor: "#f8fafc" }}>
 
@@ -219,14 +212,14 @@ export default function Login() {
       style={styles.container}
     > */}
 
-    <Stack.Screen options={{ headerShown: false }} />
-          <SafeAreaView style={{ flex: 1 }}>
-            <LinearGradient
-              colors={["#f8fafc", "#e0f2fe", "#eef2ff"]}
-              style={styles.container}
-            >
-      {/* Navbar */}
-      {/* <View style={styles.navbar}>
+      <Stack.Screen options={{ headerShown: false }} />
+      <SafeAreaView style={{ flex: 1 }}>
+        <LinearGradient
+          colors={["#f8fafc", "#e0f2fe", "#eef2ff"]}
+          style={styles.container}
+        >
+          {/* Navbar */}
+          {/* <View style={styles.navbar}>
         <View style={styles.navLeft}>
           <Ionicons name="document-text-outline" size={26} color="#2563eb" />
           <Text style={styles.logoText}>ResumeTailor</Text>
@@ -243,89 +236,89 @@ export default function Login() {
           </TouchableOpacity>
         </View>
       </View> */}
-      <Navbar variant="register"/>
+          <Navbar variant="register" />
 
-      {/* Main card */}
-      <View style={styles.card}>
-        <Text style={styles.title}>Welcome back</Text>
-        <Text style={styles.subtitle}>
-          Sign in to your account to continue tailoring your resume with AI
-        </Text>
+          {/* Main card */}
+          <View style={styles.card}>
+            <Text style={styles.title}>Welcome back</Text>
+            <Text style={styles.subtitle}>
+              Sign in to your account to continue tailoring your resume with AI
+            </Text>
 
-        {error ? (
-          <View style={styles.errorBox}>
-            <Text style={styles.errorText}>{error}</Text>
+            {error ? (
+              <View style={styles.errorBox}>
+                <Text style={styles.errorText}>{error}</Text>
+              </View>
+            ) : null}
+
+            {/* Email Input */}
+            <View style={styles.inputWrapper}>
+              <Ionicons name="mail-outline" size={20} color="#888" />
+              <TextInput
+                style={styles.input}
+                placeholder="you@example.com"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                value={email}
+                onChangeText={setEmail}
+              />
+            </View>
+
+            {/* Password Input */}
+            <View style={styles.inputWrapper}>
+              <Ionicons name="lock-closed-outline" size={20} color="#888" />
+              <TextInput
+                style={styles.input}
+                placeholder="••••••••"
+                secureTextEntry={!showPassword}
+                value={password}
+                onChangeText={setPassword}
+              />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                <Ionicons
+                  name={showPassword ? "eye-off-outline" : "eye-outline"}
+                  size={20}
+                  color="#888"
+                />
+              </TouchableOpacity>
+            </View>
+
+            {/* Sign in Button */}
+            <TouchableOpacity
+              style={[styles.button, loading && styles.disabledButton]}
+              onPress={handleSubmit}
+              disabled={loading}
+            >
+              {loading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.buttonText}>Sign in</Text>
+              )}
+            </TouchableOpacity>
+
+            {/* Divider */}
+            <View style={styles.dividerRow}>
+              <View style={styles.divider} />
+              <Text style={styles.dividerText}>Or continue with</Text>
+              <View style={styles.divider} />
+            </View>
+
+            {/* Google Login Button (placeholder for now) */}
+            <TouchableOpacity style={styles.googleButton}>
+              <Ionicons name="logo-google" size={18} color="#DB4437" />
+              <Text style={styles.googleText}>Sign in with Google</Text>
+            </TouchableOpacity>
+
+            {/* Register Link */}
+            <TouchableOpacity onPress={() => router.push("/register")}>
+              <Text style={styles.link}>
+                Don't have an account? Create one now
+              </Text>
+            </TouchableOpacity>
           </View>
-        ) : null}
-
-        {/* Email Input */}
-        <View style={styles.inputWrapper}>
-          <Ionicons name="mail-outline" size={20} color="#888" />
-          <TextInput
-            style={styles.input}
-            placeholder="you@example.com"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            value={email}
-            onChangeText={setEmail}
-          />
-        </View>
-
-        {/* Password Input */}
-        <View style={styles.inputWrapper}>
-          <Ionicons name="lock-closed-outline" size={20} color="#888" />
-          <TextInput
-            style={styles.input}
-            placeholder="••••••••"
-            secureTextEntry={!showPassword}
-            value={password}
-            onChangeText={setPassword}
-          />
-          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-            <Ionicons
-              name={showPassword ? "eye-off-outline" : "eye-outline"}
-              size={20}
-              color="#888"
-            />
-          </TouchableOpacity>
-        </View>
-
-        {/* Sign in Button */}
-        <TouchableOpacity
-          style={[styles.button, loading && styles.disabledButton]}
-          onPress={handleSubmit}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>Sign in</Text>
-          )}
-        </TouchableOpacity>
-
-        {/* Divider */}
-        <View style={styles.dividerRow}>
-          <View style={styles.divider} />
-          <Text style={styles.dividerText}>Or continue with</Text>
-          <View style={styles.divider} />
-        </View>
-
-        {/* Google Login Button (placeholder for now) */}
-        <TouchableOpacity style={styles.googleButton}>
-          <Ionicons name="logo-google" size={18} color="#DB4437" />
-          <Text style={styles.googleText}>Sign in with Google</Text>
-        </TouchableOpacity>
-
-        {/* Register Link */}
-        <TouchableOpacity onPress={() => router.push("/register")}>
-          <Text style={styles.link}>
-            Don't have an account? Create one now
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </LinearGradient>
-    </SafeAreaView>
-  </>
+        </LinearGradient>
+      </SafeAreaView>
+    </>
   );
 }
 

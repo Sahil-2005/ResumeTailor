@@ -1,90 +1,100 @@
-import React, { useEffect, useState } from "react"
-import { useNavigate, Link } from "react-router-dom"
-import ReactMarkdown from "react-markdown"
-import { Upload, FileText, Sparkles, Clock, Target, TrendingUp, Shield, Github } from "lucide-react"
+import React, { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
+import {
+  Upload,
+  FileText,
+  Sparkles,
+  Clock,
+  Target,
+  TrendingUp,
+  Shield,
+  Github,
+} from "lucide-react";
 
 export default function LandingPage() {
-  const [jobDescription, setJobDescription] = useState("")
-  const [resumeFile, setResumeFile] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [suggestions, setSuggestions] = useState("")
-  const [error, setError] = useState("")
-  const [isAuthed, setIsAuthed] = useState(false)
-  const navigate = useNavigate()
+  const [jobDescription, setJobDescription] = useState("");
+  const [resumeFile, setResumeFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState("");
+  const [error, setError] = useState("");
+  const [isAuthed, setIsAuthed] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Check for token on mount
-    const tok = localStorage.getItem("token")
-    setIsAuthed(!!tok)
+    const tok = localStorage.getItem("token");
+    setIsAuthed(!!tok);
 
     // Keep state in sync if token changes in another tab
     const onStorage = () => {
-      const t = localStorage.getItem("token")
-      setIsAuthed(!!t)
-    }
-    window.addEventListener("storage", onStorage)
-    return () => window.removeEventListener("storage", onStorage)
-  }, [])
+      const t = localStorage.getItem("token");
+      setIsAuthed(!!t);
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token")
-    setIsAuthed(false)
-    navigate("/login")
-  }
+    localStorage.removeItem("token");
+    setIsAuthed(false);
+    navigate("/login");
+  };
 
   const handleFileChange = (e) => {
-    if (!e.target.files || e.target.files.length === 0) return
-    setResumeFile(e.target.files[0])
-  }
+    if (!e.target.files || e.target.files.length === 0) return;
+    setResumeFile(e.target.files[0]);
+  };
 
   const handleGenerate = async () => {
     if (!resumeFile || !jobDescription.trim()) {
-      setError("Please upload a resume and paste a job description.")
-      return
+      setError("Please upload a resume and paste a job description.");
+      return;
     }
 
-    setLoading(true)
-    setSuggestions("")
-    setError("")
+    setLoading(true);
+    setSuggestions("");
+    setError("");
 
     try {
-      const formData = new FormData()
-      formData.append("resume", resumeFile)
-      formData.append("jobDescription", jobDescription)
+      const formData = new FormData();
+      formData.append("resume", resumeFile);
+      formData.append("jobDescription", jobDescription);
 
-      const response = await fetch("http://localhost:5000/api/generate-suggestions", {
-        method: "POST",
-        headers: {
-    "Authorization": `Bearer ${localStorage.getItem("token")}`,
-  },
-        body: formData,
-      })
+      const response = await fetch(
+        "http://localhost:5000/api/generate-suggestions",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: formData,
+        }
+      );
 
-      const text = await response.text()
-      console.log("Raw response body:", text)
+      const text = await response.text();
+      console.log("Raw response body:", text);
 
-      let data
+      let data;
       try {
-        data = JSON.parse(text)
+        data = JSON.parse(text);
       } catch (e) {
-        console.error("❌ Failed to parse JSON:", e)
-        throw new Error("Invalid response from server.")
+        console.error("❌ Failed to parse JSON:", e);
+        throw new Error("Invalid response from server.");
       }
 
       if (!response.ok) {
-        throw new Error(data?.message || `Error: ${response.status}`)
+        throw new Error(data?.message || `Error: ${response.status}`);
       }
 
-      setSuggestions(data.suggestions || "No suggestions received.")
+      setSuggestions(data.suggestions || "No suggestions received.");
     } catch (err) {
-      console.error("Fetch error:", err)
-      setError(err.message)
+      console.error("Fetch error:", err);
+      setError(err.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-
-
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
@@ -94,13 +104,21 @@ export default function LandingPage() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <FileText className="h-8 w-8 text-blue-600 mr-2" />
-              <span className="text-xl font-bold text-gray-900">ResumeTailor</span>
+              <span className="text-xl font-bold text-gray-900">
+                ResumeTailor
+              </span>
             </div>
             <div className="hidden md:flex items-center gap-3">
-              <a href="#home" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md">
+              <a
+                href="#home"
+                className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md"
+              >
                 Home
               </a>
-              <a href="#about" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md">
+              <a
+                href="#about"
+                className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md"
+              >
                 About
               </a>
               <a
@@ -111,7 +129,10 @@ export default function LandingPage() {
               >
                 GitHub
               </a>
-              <a href="#try-now" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+              <a
+                href="#try-now"
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+              >
                 Try Now
               </a>
               {isAuthed ? (
@@ -124,10 +145,16 @@ export default function LandingPage() {
                 </button>
               ) : (
                 <div className="flex items-center gap-2">
-                  <Link to="/login" className="px-3 py-2 text-gray-700 hover:text-blue-600 rounded-md">
+                  <Link
+                    to="/login"
+                    className="px-3 py-2 text-gray-700 hover:text-blue-600 rounded-md"
+                  >
                     Login
                   </Link>
-                  <Link to="/register" className="px-3 py-2 text-gray-700 hover:text-blue-600 rounded-md">
+                  <Link
+                    to="/register"
+                    className="px-3 py-2 text-gray-700 hover:text-blue-600 rounded-md"
+                  >
                     Register
                   </Link>
                 </div>
@@ -148,7 +175,8 @@ export default function LandingPage() {
               </span>
             </h1>
             <p className="text-xl text-gray-700 mb-8">
-              Upload your resume, paste a job description, and get smart suggestions to boost your application.
+              Upload your resume, paste a job description, and get smart
+              suggestions to boost your application.
             </p>
             <a
               href="#try-now"
@@ -176,8 +204,12 @@ export default function LandingPage() {
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
-            <p className="text-xl text-gray-600">Three simple steps to optimize your resume</p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              How It Works
+            </h2>
+            <p className="text-xl text-gray-600">
+              Three simple steps to optimize your resume
+            </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {[
@@ -205,11 +237,17 @@ export default function LandingPage() {
                 className="text-center p-8 border-0 shadow-lg hover:shadow-xl transition-shadow bg-white/80 backdrop-blur-sm rounded-xl"
               >
                 <div
-                  className={`w-16 h-16 ${item.color.split(" ")[0]} rounded-full flex items-center justify-center mx-auto mb-6`}
+                  className={`w-16 h-16 ${
+                    item.color.split(" ")[0]
+                  } rounded-full flex items-center justify-center mx-auto mb-6`}
                 >
-                  <item.Icon className={`h-8 w-8 ${item.color.split(" ")[1]}`} />
+                  <item.Icon
+                    className={`h-8 w-8 ${item.color.split(" ")[1]}`}
+                  />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{item.title}</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  {item.title}
+                </h3>
                 <p className="text-gray-600">{item.desc}</p>
               </div>
             ))}
@@ -221,8 +259,12 @@ export default function LandingPage() {
       <section id="about" className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Why Use ResumeTailor?</h2>
-            <p className="text-xl text-gray-600">Maximize your job application success</p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Why Use ResumeTailor?
+            </h2>
+            <p className="text-xl text-gray-600">
+              Maximize your job application success
+            </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
@@ -236,7 +278,11 @@ export default function LandingPage() {
                 title: "Align with Job Keywords Automatically",
                 desc: "Match your resume to job requirements seamlessly",
               },
-              { icon: TrendingUp, title: "Boost Your ATS Score", desc: "Optimize for applicant tracking systems" },
+              {
+                icon: TrendingUp,
+                title: "Boost Your ATS Score",
+                desc: "Optimize for applicant tracking systems",
+              },
               {
                 icon: Shield,
                 title: "Sound More Confident and Professional",
@@ -247,7 +293,9 @@ export default function LandingPage() {
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
                   <item.icon className="h-8 w-8 text-blue-600" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{item.title}</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                  {item.title}
+                </h3>
                 <p className="text-gray-600">{item.desc}</p>
               </div>
             ))}
@@ -256,27 +304,49 @@ export default function LandingPage() {
       </section>
 
       {/* Try It Now */}
-      <section id="try-now" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-50 to-indigo-50">
+      <section
+        id="try-now"
+        className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-50 to-indigo-50"
+      >
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Start Optimizing</h2>
-            <p className="text-xl text-gray-600">Upload your resume and job description to get started</p>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Start Optimizing
+            </h2>
+            <p className="text-xl text-gray-600">
+              Upload your resume and job description to get started
+            </p>
           </div>
           <div className="p-8 shadow-2xl rounded-xl bg-white/80 backdrop-blur-sm space-y-6">
             {/* File Upload */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Upload Your Resume</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Upload Your Resume
+              </label>
               <label className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors cursor-pointer block">
                 <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">{resumeFile ? resumeFile.name : "Click to upload or drag and drop"}</p>
-                <input type="file" accept=".pdf,.doc,.docx" onChange={handleFileChange} className="hidden" />
-                <p className="text-sm text-gray-500 mt-2">PDF, DOC, or DOCX (max 10MB)</p>
+                <p className="text-gray-600">
+                  {resumeFile
+                    ? resumeFile.name
+                    : "Click to upload or drag and drop"}
+                </p>
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+                <p className="text-sm text-gray-500 mt-2">
+                  PDF, DOC, or DOCX (max 10MB)
+                </p>
               </label>
             </div>
 
             {/* Job Description */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Job Description</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Job Description
+              </label>
               <textarea
                 placeholder="Paste the job description here..."
                 value={jobDescription}
@@ -287,7 +357,9 @@ export default function LandingPage() {
 
             {/* Error/Status */}
             {error && <p className="text-red-600">{error}</p>}
-            {loading && <p className="text-blue-600">Generating suggestions...</p>}
+            {loading && (
+              <p className="text-blue-600">Generating suggestions...</p>
+            )}
 
             {/* Submit */}
             <button
@@ -304,19 +376,36 @@ export default function LandingPage() {
             <div className="mt-10 px-6 py-8 bg-white border border-blue-300 rounded-2xl shadow-md transition-all duration-300">
               <div className="flex items-center gap-3 mb-6">
                 <span className="text-3xl">💡</span>
-                <h3 className="text-2xl font-bold text-blue-800">Tailored AI Suggestions</h3>
+                <h3 className="text-2xl font-bold text-blue-800">
+                  Tailored AI Suggestions
+                </h3>
               </div>
               <ReactMarkdown
                 components={{
                   p: ({ node, ...props }) => (
-                    <p className="mb-4 text-gray-800 leading-relaxed text-base" {...props} />
+                    <p
+                      className="mb-4 text-gray-800 leading-relaxed text-base"
+                      {...props}
+                    />
                   ),
                   ul: ({ node, ...props }) => (
-                    <ul className="list-disc ml-6 space-y-4 text-gray-900" {...props} />
+                    <ul
+                      className="list-disc ml-6 space-y-4 text-gray-900"
+                      {...props}
+                    />
                   ),
-                  li: ({ node, ...props }) => <li className="text-base leading-relaxed" {...props} />,
-                  strong: ({ node, ...props }) => <strong className="font-semibold text-blue-900" {...props} />,
-                  em: ({ node, ...props }) => <em className="italic text-blue-700" {...props} />,
+                  li: ({ node, ...props }) => (
+                    <li className="text-base leading-relaxed" {...props} />
+                  ),
+                  strong: ({ node, ...props }) => (
+                    <strong
+                      className="font-semibold text-blue-900"
+                      {...props}
+                    />
+                  ),
+                  em: ({ node, ...props }) => (
+                    <em className="italic text-blue-700" {...props} />
+                  ),
                 }}
               >
                 {suggestions}
@@ -329,9 +418,14 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="bg-white border-t border-gray-200 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
-          <div className="text-gray-600 mb-4 md:mb-0">© 2025 ResumeTailor. Built by Sahil.</div>
+          <div className="text-gray-600 mb-4 md:mb-0">
+            © 2025 ResumeTailor. Built by Sahil.
+          </div>
           <div className="flex items-center space-x-6">
-            <a href="https://github.com/Sahil-2005" className="text-gray-600 hover:text-blue-600">
+            <a
+              href="https://github.com/Sahil-2005"
+              className="text-gray-600 hover:text-blue-600"
+            >
               <Github className="h-5 w-5" />
             </a>
             <a href="#" className="text-gray-600 hover:text-blue-600">
@@ -341,5 +435,5 @@ export default function LandingPage() {
         </div>
       </footer>
     </div>
-  )
+  );
 }

@@ -55,7 +55,6 @@ export default function Navbar({ variant }: NavbarProps) {
 
       {/* Right side */}
       <View style={styles.navRight}>
-
         {/* { variant === "homeBlock" ? null : 
 
         (<TouchableOpacity onPress={() => router.replace("/")}>

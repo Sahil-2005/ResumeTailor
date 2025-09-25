@@ -1,75 +1,75 @@
-import React, { useState } from "react"
-import { useNavigate, Link } from "react-router-dom"
-import { GoogleLogin } from "@react-oauth/google"
-import { Eye, EyeOff, Mail, Lock, FileText } from "lucide-react"
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { GoogleLogin } from "@react-oauth/google";
+import { Eye, EyeOff, Mail, Lock, FileText } from "lucide-react";
 
 export default function Login({ setToken }) {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   // ---------- Email/Password Login ----------
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError("")
-    setLoading(true)
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
     try {
       const res = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
-      })
+      });
 
-      const data = await res.json()
+      const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.message || "Login failed")
+        throw new Error(data.message || "Login failed");
       }
 
-      localStorage.setItem("token", data.token)
-      setToken(data.token)
+      localStorage.setItem("token", data.token);
+      setToken(data.token);
 
-      navigate("/")
+      navigate("/");
     } catch (err) {
-      setError(err.message)
+      setError(err.message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   // ---------- Google Login ----------
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      const idToken = credentialResponse.credential
+      const idToken = credentialResponse.credential;
 
       const res = await fetch("http://localhost:5000/api/auth/google", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ idToken }),
-      })
+      });
 
-      const data = await res.json()
+      const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.message || "Google login failed")
+        throw new Error(data.message || "Google login failed");
       }
 
-      localStorage.setItem("token", data.token)
-      setToken(data.token)
+      localStorage.setItem("token", data.token);
+      setToken(data.token);
 
-      navigate("/")
+      navigate("/");
     } catch (err) {
-      setError(err.message)
+      setError(err.message);
     }
-  }
+  };
 
   const handleGoogleError = () => {
-    setError("Google login failed. Please try again.")
-  }
+    setError("Google login failed. Please try again.");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
@@ -79,10 +79,15 @@ export default function Login({ setToken }) {
           <div className="flex justify-between items-center h-16">
             <Link to="/" className="flex items-center">
               <FileText className="h-8 w-8 text-blue-600 mr-2" />
-              <span className="text-xl font-bold text-gray-900">ResumeTailor</span>
+              <span className="text-xl font-bold text-gray-900">
+                ResumeTailor
+              </span>
             </Link>
             <div className="flex items-center gap-3">
-              <Link to="/" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md">
+              <Link
+                to="/"
+                className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md"
+              >
                 Home
               </Link>
               <Link
@@ -100,7 +105,9 @@ export default function Login({ setToken }) {
         <div className="w-full max-w-md space-y-8">
           {/* Header */}
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900 text-balance">Welcome back</h2>
+            <h2 className="text-3xl font-bold text-gray-900 text-balance">
+              Welcome back
+            </h2>
             <p className="mt-2 text-gray-600 text-pretty">
               Sign in to your account to continue tailoring your resume with AI
             </p>
@@ -120,7 +127,10 @@ export default function Login({ setToken }) {
             {/* Email/Password Form */}
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="email"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Email address
                 </label>
                 <div className="relative">
@@ -141,7 +151,10 @@ export default function Login({ setToken }) {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Password
                 </label>
                 <div className="relative">
@@ -195,13 +208,18 @@ export default function Login({ setToken }) {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-gray-500">Or continue with</span>
+                <span className="px-4 bg-white text-gray-500">
+                  Or continue with
+                </span>
               </div>
             </div>
 
             {/* Google Login */}
             <div className="flex justify-center">
-              <GoogleLogin onSuccess={handleGoogleSuccess} onError={handleGoogleError} />
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={handleGoogleError}
+              />
             </div>
           </div>
 
@@ -220,5 +238,5 @@ export default function Login({ setToken }) {
         </div>
       </main>
     </div>
-  )
+  );
 }

@@ -146,8 +146,6 @@
 //   link: { color: "#2563eb", textAlign: "center" },
 // })
 
-
-
 // resumetailor-mobile/pages/Register.tsx
 import React, { useState } from "react";
 import {
@@ -231,7 +229,7 @@ export default function Register() {
               </TouchableOpacity>
             </View>
           </View> */}
-          <Navbar variant="login"/>
+          <Navbar variant="login" />
 
           {/* Card */}
           <View style={styles.card}>

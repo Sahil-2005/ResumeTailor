@@ -243,6 +243,8 @@ export default function HomeScreen() {
                 <Text style={styles.generateText}>Generate Suggestions</Text>
               </TouchableOpacity>
             </View> */}
+
+            
             {/* Try It Now */}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Try It Now</Text>
