@@ -325,7 +325,7 @@ import * as AuthSession from "expo-auth-session";
 WebBrowser.maybeCompleteAuthSession();
 
 // Google OAuth config
-const CLIENT_ID = "567161115414-pe1tt2q6v0n64dg0kgqplmfl6a8d9nki.apps.googleusercontent.com";
+const CLIENT_ID = "872721848273-r9q77t8orsqpekgsq9opp48g7cjf314d.apps.googleusercontent.com";
 const redirectUri = AuthSession.makeRedirectUri();
 
 export default function Login() {
@@ -386,7 +386,7 @@ export default function Login() {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("http://192.168.1.104:5000/api/auth/login", {
+      const res = await fetch("http://192.168.1.103:5000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
