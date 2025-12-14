@@ -11,6 +11,7 @@ import {
   Shield,
   Github,
 } from "lucide-react";
+import { apiFetch } from "../utils/api";
 
 export default function LandingPage() {
   const [jobDescription, setJobDescription] = useState("");
@@ -61,13 +62,11 @@ export default function LandingPage() {
       formData.append("resume", resumeFile);
       formData.append("jobDescription", jobDescription);
 
-      const response = await fetch(
-        "http://localhost:5000/api/generate-suggestions",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+      const response = await apiFetch("api/generate-suggestions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
           body: formData,
         }
       );
