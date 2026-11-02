@@ -9,7 +9,6 @@ import {
   Target,
   TrendingUp,
   Shield,
-  Github,
 } from "lucide-react";
 import { apiFetch } from "../utils/api";
 
@@ -119,14 +118,6 @@ export default function LandingPage() {
                 className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md"
               >
                 About
-              </a>
-              <a
-                href="https://github.com/Sahil-2005"
-                target="_blank"
-                rel="noreferrer"
-                className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md"
-              >
-                GitHub
               </a>
               <a
                 href="#try-now"
@@ -418,15 +409,9 @@ export default function LandingPage() {
       <footer className="bg-white border-t border-gray-200 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
           <div className="text-gray-600 mb-4 md:mb-0">
-            © 2025 ResumeTailor. Built by Sahil.
+            © 2025 ResumeTailor. All rights reserved.
           </div>
           <div className="flex items-center space-x-6">
-            <a
-              href="https://github.com/Sahil-2005"
-              className="text-gray-600 hover:text-blue-600"
-            >
-              <Github className="h-5 w-5" />
-            </a>
             <a href="#" className="text-gray-600 hover:text-blue-600">
               Terms
             </a>
